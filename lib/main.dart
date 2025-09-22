@@ -1,39 +1,10 @@
+// main.dart
 import 'package:flutter/material.dart';
+import 'recipe.dart'; // ← Recipe クラスとレシピデータをここから読み込む
 
 void main() {
   runApp(RecipeApp());
 }
-
-class Recipe {
-  final String title;
-  final String imageUrl;
-  final List<String> ingredients;
-  final List<String> steps;
-
-  Recipe({
-    required this.title,
-    required this.imageUrl,
-    required this.ingredients,
-    required this.steps,
-  });
-}
-
-final List<Recipe> recipes = [
-  Recipe(
-    title: 'トンテキ',
-    imageUrl:
-        'https://cdn.pixabay.com/photo/2022/04/05/20/58/meat-7113156_1280.jpg',
-    ingredients: ['豚肉', 'にんにく', 'ソース'],
-    steps: ['豚肉を焼く', 'ソースをかける', '盛り付けて完成'],
-  ),
-  Recipe(
-    title: '照り焼きチキン',
-    imageUrl:
-        'https://cdn.pixabay.com/photo/2016/03/05/20/07/teriyaki-chicken-1239006_1280.jpg',
-    ingredients: ['鶏もも肉', 'しょうゆ', 'みりん', '砂糖'],
-    steps: ['タレを作る', '鶏肉を焼く', 'タレを絡める'],
-  ),
-];
 
 class RecipeApp extends StatelessWidget {
   @override
@@ -56,7 +27,7 @@ class RecipeListPage extends StatelessWidget {
       appBar: AppBar(title: const Text('レシピ一覧')),
       body: GridView.builder(
         padding: const EdgeInsets.all(10),
-        itemCount: recipes.length,
+        itemCount: recipes.length, // ← recipe.dart から読み込んだデータを使う
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.8,
@@ -85,7 +56,7 @@ class RecipeListPage extends StatelessWidget {
                     child: Image.network(
                       recipe.imageUrl,
                       height: 100,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain, // ← サイズを適切に合わせる
                     ),
                   ),
                   Padding(
@@ -122,7 +93,10 @@ class RecipeDetailPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            Image.network(recipe.imageUrl),
+            Image.network(
+              recipe.imageUrl,
+              fit: BoxFit.contain, // ← ここも調整
+            ),
             const SizedBox(height: 16),
             Text('材料', style: textStyle),
             ...recipe.ingredients.map((item) => Text('・$item')).toList(),
